@@ -198,40 +198,17 @@ class GoBoard(object):
         Returns boolean: whether move was legal
         """
         assert is_black_white(color)
-        # Special cases
-        if point == PASS:
-            self.ko_recapture = None
-            self.current_player = GoBoardUtil.opponent(color)
-            self.last2_move = self.last_move
-            self.last_move = point
-            return True
-        elif self.board[point] != EMPTY:
-            return False
-        if point == self.ko_recapture:
-            return False
-
-        # General case: deal with captures, suicide, and next ko point
-        opp_color = GoBoardUtil.opponent(color)
-        in_enemy_eye = self._is_surrounded(point, opp_color)
-        self.board[point] = color
-        single_captures = []
-        neighbors = self._neighbors(point)
-        for nb in neighbors:
-            if self.board[nb] == opp_color:
-                single_capture = self._detect_and_process_capture(nb)
-                if single_capture != None:
-                    single_captures.append(single_capture)
-        block = self._block_of(point)
-        if not self._has_liberty(block):  # undo suicide move
-            self.board[point] = EMPTY
-            return False
-        self.ko_recapture = None
-        if in_enemy_eye and len(single_captures) == 1:
-            self.ko_recapture = single_captures[0]
-        self.current_player = GoBoardUtil.opponent(color)
-        self.last2_move = self.last_move
-        self.last_move = point
-        return True
+        if self.current_player != color:
+          return "wrong color"
+        
+        if self.board[point] == EMPTY:
+          self.board[point] = color
+          self.current_player = GoBoardUtil.opponent(color)
+          self.last2_move = self.last_move
+          self.last_move = point
+          return None
+          
+        return "occupied"
 
     def neighbors_of_color(self, point, color):
         """ List of neighbors of point of given color """
@@ -240,6 +217,16 @@ class GoBoard(object):
             if self.get_color(nb) == color:
                 nbc.append(nb)
         return nbc
+
+    def all_neighbors_of_color(self, point, color):
+	    """ List all neighbors of point of given color """
+	    nbc = []
+	    neighbors = self._neighbors(point)
+	    neighbors += self._diag_neighbors(point)
+	    for point2 in neighbors:
+	        if self.get_color(point2) == color:
+	            nbc.append(point2)
+	    return nbc
 
     def _neighbors(self, point):
         """ List of all four neighbors of the point """

@@ -25,8 +25,7 @@ class Go0:
         self.version = 1.0
 
     def get_move(self, board, color):
-        return GoBoardUtil.generate_random_move(board, color, 
-                                                use_eye_filter=False)
+        return GoBoardUtil.generate_random_move(board, color, use_eye_filter=False)
 
 
 def run():

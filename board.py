@@ -92,6 +92,99 @@ class GoBoard(object):
         """
         return where1d(self.board == EMPTY)
 
+    def get_occupied_points(self):
+        """
+        Return:
+            The occupied points on the board
+        """
+        points = []
+        for point in where1d(self.board == BLACK):
+            points.append(point)
+        for point in where1d(self.board == WHITE):
+            points.append(point)
+        return points
+
+    def check_win(self):
+        points = self.get_occupied_points()
+        for point in points:
+            color = self.get_color(point)
+            if self.isVerticalWin(point) or self.isHorizontalWin(point) or self.isDiag1Win(point) or self.isDiag2Win(point):
+                return color
+        return 0
+    
+    def isVerticalWin(self, point):
+        p5 = point
+        p4 = p5 - self.NS
+        p3 = p4 - self.NS
+        p2 = p3 - self.NS
+        p1 = p2 - self.NS
+        p6 = p5 + self.NS
+        p7 = p6 + self.NS
+        p8 = p7 + self.NS
+        p9 = p8 + self.NS
+        if p1 >= 0:
+            if self.get_color(p1)==self.get_color(p5) and self.get_color(p2)==self.get_color(p5) and self.get_color(p3)==self.get_color(p5) and self.get_color(p4)==self.get_color(p5):
+                return True
+        if p9 <= self.NS*self.NS:
+            if self.get_color(p6)==self.get_color(p5) and self.get_color(p7)==self.get_color(p5) and self.get_color(p8)==self.get_color(p5) and self.get_color(p9)==self.get_color(p5):
+                return True
+        return False
+        
+    def isHorizontalWin(self, point):
+        p5 = point
+        p4 = p5 - 1
+        p3 = p4 - 1
+        p2 = p3 - 1
+        p1 = p2 - 1
+        p6 = p5 + 1
+        p7 = p6 + 1
+        p8 = p7 + 1
+        p9 = p8 + 1
+        if p1 >= 0:
+            if self.get_color(p1)==self.get_color(p5) and self.get_color(p2)==self.get_color(p5) and self.get_color(p3)==self.get_color(p5) and self.get_color(p4)==self.get_color(p5):
+                return True
+        if p9 <= self.NS*self.NS:
+            if self.get_color(p6)==self.get_color(p5) and self.get_color(p7)==self.get_color(p5) and self.get_color(p8)==self.get_color(p5) and self.get_color(p9)==self.get_color(p5):
+                return True
+        return False
+
+    def isDiag1Win(self, point):
+        p5 = point
+        p4 = p5 - self.NS - 1
+        p3 = p4 - self.NS - 1
+        p2 = p3 - self.NS - 1
+        p1 = p2 - self.NS - 1
+        p6 = p5 + self.NS + 1
+        p7 = p6 + self.NS + 1
+        p8 = p7 + self.NS + 1
+        p9 = p8 + self.NS + 1
+        if p1 >= 0:
+            if self.get_color(p1)==self.get_color(p5) and self.get_color(p2)==self.get_color(p5) and self.get_color(p3)==self.get_color(p5) and self.get_color(p4)==self.get_color(p5):
+                return True
+        if p9 <= self.NS*self.NS:
+            if self.get_color(p6)==self.get_color(p5) and self.get_color(p7)==self.get_color(p5) and self.get_color(p8)==self.get_color(p5) and self.get_color(p9)==self.get_color(p5):
+                return True
+        return False
+
+
+    def isDiag2Win(self, point):
+        p5 = point
+        p4 = p5 - self.NS + 1
+        p3 = p4 - self.NS + 1
+        p2 = p3 - self.NS + 1
+        p1 = p2 - self.NS + 1
+        p6 = p5 + self.NS - 1
+        p7 = p6 + self.NS - 1
+        p8 = p7 + self.NS - 1
+        p9 = p8 + self.NS - 1
+        if p1 >= 0 and p1 <= self.NS*self.NS:
+            if self.get_color(p1)==self.get_color(p5) and self.get_color(p2)==self.get_color(p5) and self.get_color(p3)==self.get_color(p5) and self.get_color(p4)==self.get_color(p5):
+                return True
+        if p9 >= 0 and p9 <= self.NS*self.NS:
+            if self.get_color(p6)==self.get_color(p5) and self.get_color(p7)==self.get_color(p5) and self.get_color(p8)==self.get_color(p5) and self.get_color(p9)==self.get_color(p5):
+                return True
+        return False
+    
     def row_start(self, row):
         assert row >= 1
         assert row <= self.size

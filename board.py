@@ -292,8 +292,6 @@ class GoBoard(object):
         Returns boolean: whether move was legal
         """
         assert is_black_white(color)
-        if self.current_player != color:
-          return "wrong color"
         
         if self.board[point] == EMPTY:
           self.board[point] = color
